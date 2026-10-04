@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+
+        content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <meta name="theme-color" content="#1371e8">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <meta name="apple-mobile-web-app-title" content="코웨이 예약">
+
+  <title>코웨이 방문예약</title>
+
+  <style>
+
+    * {
+
+      box-sizing: border-box;
+
+    }
+
+    body {
+
+      margin: 0;
+
+      background: #f4f6f9;
+
+      font-family:
+
+        -apple-system,
+
+        BlinkMacSystemFont,
+
+        "Apple SD Gothic Neo",
+
+        "Noto Sans KR",
+
+        sans-serif;
+
+      color: #1f2937;
+
+    }
+
+    .container {
+
+      max-width: 700px;
+
+      margin: 0 auto;
+
+      padding: 16px;
+
+      padding-bottom: 110px;
+
+    }
+
+    .header {
+
+      margin-bottom: 18px;
+
+    }
+
+    .header h1 {
+
+      margin: 0 0 6px;
+
+      font-size: 24px;
+
+    }
+
+    .header p {
+
+      margin: 0;
+
+      color: #6b7280;
+
+      font-size: 14px;
+
+    }
+
+    .week-nav {
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr 1fr;
+
+      gap: 8px;
+
+      margin-bottom: 15px;
+
+    }
+
+    button {
+
+      border: none;
+
+      border-radius: 12px;
+
+      min-height: 46px;
+
+      font-size: 15px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+    }
+
+    .nav-btn {
+
+      background: white;
+
+      border: 1px solid #d9dee7;
+
+    }
+
+    .today-btn {
+
+      background: #1371e8;
+
+      color: white;
+
+    }
+
+    .week-title {
+
+      background: white;
+
+      border-radius: 14px;
+
+      padding: 13px;
+
+      margin-bottom: 14px;
+
+      text-align: center;
+
+      font-size: 16px;
+
+      font-weight: 800;
+
+      border: 1px solid #e1e5eb;
+
+    }
+
+    .day-card {
+
+      background: white;
+
+      border-radius: 17px;
+
+      padding: 14px;
+
+      margin-bottom: 12px;
+
+      border: 1px solid #e0e4ea;
+
+    }
+
+    .day-card.off {
+
+      background: #f0f1f3;
+
+    }
+
+    .day-head {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-bottom: 12px;
+
+    }
+
+    .day-name {
+
+      font-size: 18px;
+
+      font-weight: 800;
+
+    }
+
+    .day-date {
+
+      margin-top: 3px;
+
+      color: #6b7280;
+
+      font-size: 13px;
+
+    }
+
+    .off-btn {
+
+      padding: 8px 12px;
+
+      min-height: 40px;
+
+      background: #eef1f5;
+
+    }
+
+    .off-btn.active {
+
+      background: #555f6d;
+
+      color: white;
+
+    }
+
+    .time-grid {
+
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 8px;
+
+    }
+
+    .time-btn {
+
+      min-height: 60px;
+
+      background: #e9f7ee;
+
+      border: 1px solid #cce8d5;
+
+      color: #166534;
+
+    }
+
+    .time-btn .time {
+
+      display: block;
+
+      font-size: 17px;
+
+    }
+
+    .time-btn small {
+
+      display: block;
+
+      margin-top: 4px;
+
+      font-size: 11px;
+
+      font-weight: 600;
+
+    }
+
+    .time-btn.booked {
+
+      background: #ffeaea;
+
+      border-color: #f1c3c3;
+
+      color: #b42318;
+
+    }
+
+    .time-btn.disabled {
+
+      background: #dfe3e8;
+
+      color: #8b929d;
+
+      border-color: #d2d6dc;
+
+    }
+
+    .message-box {
+
+      background: white;
+
+      border-radius: 17px;
+
+      padding: 14px;
+
+      border: 1px solid #e0e4ea;
+
+      margin-top: 18px;
+
+    }
+
+    .message-title {
+
+      font-size: 18px;
+
+      font-weight: 800;
+
+      margin-bottom: 5px;
+
+    }
+
+    .message-help {
+
+      color: #6b7280;
+
+      font-size: 13px;
+
+      margin-bottom: 10px;
+
+    }
+
+    textarea {
+
+      width: 100%;
+
+      height: 220px;
+
+      resize: none;
+
+      border-radius: 12px;
+
+      border: 1px solid #d7dce4;
+
+      padding: 12px;
+
+      font-family: inherit;
+
+      font-size: 15px;
+
+      line-height: 1.65;
+
+      background: #fafbfc;
+
+    }
+
+    .message-actions {
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 8px;
+
+      margin-top: 10px;
+
+    }
+
+    .copy-btn {
+
+      background: #1371e8;
+
+      color: white;
+
+    }
+
+    .share-btn {
+
+      background: #ecf3ff;
+
+      color: #125bb9;
+
+    }
+
+    .status {
+
+      min-height: 20px;
+
+      margin-top: 8px;
+
+      color: #1371e8;
+
+      font-size: 13px;
+
+    }
+
+    .footer {
+
+      position: fixed;
+
+      left: 0;
+
+      right: 0;
+
+      bottom: 0;
+
+      padding:
+
+        10px 14px
+
+        calc(10px + env(safe-area-inset-bottom));
+
+      background: rgba(255, 255, 255, 0.96);
+
+      border-top: 1px solid #dfe3e8;
+
+      backdrop-filter: blur(10px);
+
+    }
+
+    .footer-inner {
+
+      max-width: 700px;
+
+      margin: auto;
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 8px;
+
+    }
+
+    .all-btn {
+
+      background: #e9f7ee;
+
+      color: #166534;
+
+    }
+
+    .reset-btn {
+
+      background: #fff0f0;
+
+      color: #b42318;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+
+    <h1>코웨이 방문예약</h1>
+
+    <p>고객정보 저장 없이 예약 가능시간만 관리합니다.</p>
+
+  </div>
+
+  <div class="week-nav">
+
+    <button class="nav-btn" onclick="moveWeek(-1)">
+
+      이전 주
+
+    </button>
+
+    <button class="today-btn" onclick="goCurrentWeek()">
+
+      이번 주
+
+    </button>
+
+    <button class="nav-btn" onclick="moveWeek(1)">
+
+      다음 주
+
+    </button>
+
+  </div>
+
+  <div class="week-title" id="weekTitle"></div>
+
+  <div id="schedule"></div>
+
+  <div class="message-box">
+
+    <div class="message-title">
+
+      고객 발송용 문자
+
+    </div>
+
+    <div class="message-help">
+
+      현재 예약 가능한 시간만 자동으로 표시됩니다.
+
+    </div>
+
+    <textarea id="messageText" readonly></textarea>
+
+    <div class="message-actions">
+
+      <button
+
+        class="copy-btn"
+
+        onclick="copyMessage()">
+
+        문자 복사
+
+      </button>
+
+      <button
+
+        class="share-btn"
+
+        onclick="shareMessage()">
+
+        공유
+
+      </button>
+
+    </div>
+
+    <div class="status" id="statusText"></div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+
+  <div class="footer-inner">
+
+    <button
+
+      class="all-btn"
+
+      onclick="openAllWeek()">
+
+      이번 주 전체 가능
+
+    </button>
+
+    <button
+
+      class="reset-btn"
+
+      onclick="resetWeek()">
+
+      이번 주 초기화
+
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const TIME_LIST = [
+
+  10,
+
+  11,
+
+  12,
+
+  13,
+
+  14,
+
+  15,
+
+  16,
+
+  17,
+
+  18
+
+];
+
+const DAY_NAMES = [
+
+  "월",
+
+  "화",
+
+  "수",
+
+  "목",
+
+  "금",
+
+  "토"
+
+];
+
+const STORAGE_KEY =
+
+  "coway_visit_schedule_v3";
+
+let savedData =
+
+  JSON.parse(
+
+    localStorage.getItem(STORAGE_KEY) || "{}"
+
+  );
+
+let currentMonday =
+
+  getMonday(new Date());
+
+function getMonday(date) {
+
+  const d = new Date(date);
+
+  d.setHours(12,0,0,0);
+
+  let day = d.getDay();
+
+  let diff =
+
+    day === 0
+
+    ? -6
+
+    : 1 - day;
+
+  d.setDate(
+
+    d.getDate() + diff
+
+  );
+
+  return d;
+
+}
+
+function dateKey(date) {
+
+  const y =
+
+    date.getFullYear();
+
+  const m =
+
+    String(
+
+      date.getMonth()+1
+
+    ).padStart(2,"0");
+
+  const d =
+
+    String(
+
+      date.getDate()
+
+    ).padStart(2,"0");
+
+  return `${y}-${m}-${d}`;
+
+}
+
+function addDays(date, days) {
+
+  const d =
+
+    new Date(date);
+
+  d.setDate(
+
+    d.getDate()+days
+
+  );
+
+  return d;
+
+}
+
+function saveData() {
+
+  localStorage.setItem(
+
+    STORAGE_KEY,
+
+    JSON.stringify(savedData)
+
+  );
+
+}
+
+function getDayData(date) {
+
+  const key =
+
+    dateKey(date);
+
+  if(!savedData[key]) {
+
+    savedData[key] = {
+
+      off:false,
+
+      booked:{}
+
+    };
+
+  }
+
+  return savedData[key];
+
+}
+
+function toggleSlot(date,hour) {
+
+  const data =
+
+    getDayData(date);
+
+  if(data.off) return;
+
+  if(data.booked[hour]) {
+
+    delete data.booked[hour];
+
+  } else {
+
+    data.booked[hour] = true;
+
+  }
+
+  saveData();
+
+  render();
+
+}
+
+function toggleDayOff(date) {
+
+  const data =
+
+    getDayData(date);
+
+  data.off =
+
+    !data.off;
+
+  saveData();
+
+  render();
+
+}
+
+function formatShort(date) {
+
+  return `${
+
+    date.getMonth()+1
+
+  }/${
+
+    date.getDate()
+
+  }`;
+
+}
+
+function render() {
+
+  const schedule =
+
+    document.getElementById(
+
+      "schedule"
+
+    );
+
+  schedule.innerHTML = "";
+
+  const saturday =
+
+    addDays(
+
+      currentMonday,
+
+      5
+
+    );
+
+  document.getElementById(
+
+    "weekTitle"
+
+  ).textContent =
+
+    `${formatShort(currentMonday)} ~ ${formatShort(saturday)}`;
+
+  DAY_NAMES.forEach(
+
+    (dayName,index) => {
+
+      const date =
+
+        addDays(
+
+          currentMonday,
+
+          index
+
+        );
+
+      const data =
+
+        getDayData(date);
+
+      const card =
+
+        document.createElement(
+
+          "div"
+
+        );
+
+      card.className =
+
+        "day-card" +
+
+        (data.off
+
+          ? " off"
+
+          : ""
+
+        );
+
+      const head =
+
+        document.createElement(
+
+          "div"
+
+        );
+
+      head.className =
+
+        "day-head";
+
+      const left =
+
+        document.createElement(
+
+          "div"
+
+        );
+
+      left.innerHTML = `
+
+        <div class="day-name">
+
+          ${
+
+            date.getMonth()+1
+
+          }월 ${
+
+            date.getDate()
+
+          }일 (${dayName})
+
+        </div>
+
+        <div class="day-date">
+
+          ${
+
+            data.off
+
+            ? "하루 전체 휴무"
+
+            : "시간을 누르면 예약됨으로 변경"
+
+          }
+
+        </div>
+
+      `;
+
+      const offButton =
+
+        document.createElement(
+
+          "button"
+
+        );
+
+      offButton.className =
+
+        "off-btn" +
+
+        (data.off
+
+          ? " active"
+
+          : ""
+
+        );
+
+      offButton.textContent =
+
+        data.off
+
+        ? "휴무 해제"
+
+        : "하루 휴무";
+
+      offButton.onclick =
+
+        () =>
+
+          toggleDayOff(date);
+
+      head.appendChild(left);
+
+      head.appendChild(
+
+        offButton
+
+      );
+
+      card.appendChild(head);
+
+      const grid =
+
+        document.createElement(
+
+          "div"
+
+        );
+
+      grid.className =
+
+        "time-grid";
+
+      TIME_LIST.forEach(
+
+        hour => {
+
+          const button =
+
+            document.createElement(
+
+              "button"
+
+            );
+
+          let booked =
+
+            !!data.booked[hour];
+
+          if(data.off) {
+
+            button.className =
+
+              "time-btn disabled";
+
+            button.disabled =
+
+              true;
+
+          }
+
+          else if(booked) {
+
+            button.className =
+
+              "time-btn booked";
+
+          }
+
+          else {
+
+            button.className =
+
+              "time-btn";
+
+          }
+
+          button.innerHTML = `
+
+            <span class="time">
+
+              ${hour}:00
+
+            </span>
+
+            <small>
+
+              ${
+
+                data.off
+
+                ? "휴무"
+
+                : booked
+
+                  ? "예약됨"
+
+                  : "예약가능"
+
+              }
+
+            </small>
+
+          `;
+
+          button.onclick =
+
+            () =>
+
+              toggleSlot(
+
+                date,
+
+                hour
+
+              );
+
+          grid.appendChild(
+
+            button
+
+          );
+
+      });
+
+      card.appendChild(
+
+        grid
+
+      );
+
+      schedule.appendChild(
+
+        card
+
+      );
+
+  });
+
+  updateMessage();
+
+}
+
+function updateMessage() {
+
+  let availableLines =
+
+    [];
+
+  DAY_NAMES.forEach(
+
+    (dayName,index) => {
+
+      const date =
+
+        addDays(
+
+          currentMonday,
+
+          index
+
+        );
+
+      const data =
+
+        getDayData(date);
+
+      if(data.off)
+
+        return;
+
+      const available =
+
+        TIME_LIST.filter(
+
+          hour =>
+
+            !data.booked[hour]
+
+        );
+
+      if(
+
+        available.length
+
+      ) {
+
+        availableLines.push(
+
+          `${
+
+            date.getMonth()+1
+
+          }/${
+
+            date.getDate()
+
+          }(${dayName}) ${
+
+            available.join("·")
+
+          }시`
+
+        );
+
+      }
+
+  });
+
+  let scheduleText;
+
+  if(
+
+    availableLines.length
+
+  ) {
+
+    scheduleText =
+
+      availableLines.join(
+
+        "\n"
+
+      );
+
+  }
+
+  else {
+
+    scheduleText =
+
+      "현재 예약 가능한 시간이 없습니다.";
+
+  }
+
+  const message =
+
+`안녕하세요 고객님😊
+
+코웨이 홈케어 방문일정 안내드립니다.
+
+📅 예약 가능시간
+
+${scheduleText}
+
+가능하신 날짜와 시간을 회신해주세요.
+
+예) ${
+
+  currentMonday.getMonth()+1
+
+}/${
+
+  currentMonday.getDate()
+
+} 14시`;
+
+  document.getElementById(
+
+    "messageText"
+
+  ).value =
+
+    message;
+
+}
+
+function moveWeek(direction) {
+
+  currentMonday =
+
+    addDays(
+
+      currentMonday,
+
+      direction*7
+
+    );
+
+  render();
+
+}
+
+function goCurrentWeek() {
+
+  currentMonday =
+
+    getMonday(
+
+      new Date()
+
+    );
+
+  render();
+
+}
+
+function openAllWeek() {
+
+  DAY_NAMES.forEach(
+
+    (_,index) => {
+
+      const date =
+
+        addDays(
+
+          currentMonday,
+
+          index
+
+        );
+
+      const key =
+
+        dateKey(date);
+
+      savedData[key] = {
+
+        off:false,
+
+        booked:{}
+
+      };
+
+  });
+
+  saveData();
+
+  render();
+
+}
+
+function resetWeek() {
+
+  const ok =
+
+    confirm(
+
+      "이번 주 예약상태를 모두 초기화할까요?"
+
+    );
+
+  if(!ok)
+
+    return;
+
+  DAY_NAMES.forEach(
+
+    (_,index) => {
+
+      const date =
+
+        addDays(
+
+          currentMonday,
+
+          index
+
+        );
+
+      delete savedData[
+
+        dateKey(date)
+
+      ];
+
+  });
+
+  saveData();
+
+  render();
+
+}
+
+async function copyMessage() {
+
+  const text =
+
+    document.getElementById(
+
+      "messageText"
+
+    ).value;
+
+  try {
+
+    await navigator.clipboard
+
+      .writeText(text);
+
+    document.getElementById(
+
+      "statusText"
+
+    ).textContent =
+
+      "✅ 문자 내용을 복사했습니다.";
+
+  }
+
+  catch(e) {
+
+    const textarea =
+
+      document.getElementById(
+
+        "messageText"
+
+      );
+
+    textarea.select();
+
+    document.execCommand(
+
+      "copy"
+
+    );
+
+    document.getElementById(
+
+      "statusText"
+
+    ).textContent =
+
+      "✅ 문자 내용을 복사했습니다.";
+
+  }
+
+}
+
+async function shareMessage() {
+
+  const text =
+
+    document.getElementById(
+
+      "messageText"
+
+    ).value;
+
+  if(
+
+    navigator.share
+
+  ) {
+
+    try {
+
+      await navigator.share({
+
+        text:text
+
+      });
+
+    }
+
+    catch(e) {}
+
+  }
+
+  else {
+
+    copyMessage();
+
+  }
+
+}
+
+render();
+
+</script>
+
+</body>
+
+</html>
